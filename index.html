@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Sharing Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f3f4f6;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .input {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .file-input-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .file-input-label:hover {
+            border-color: #9ca3af;
+        }
+        .file-input-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .success-icon {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="main-menu">
+            <button class="btn btn-primary" onclick="showUploadPage()">Upload File</button>
+            <button class="btn btn-secondary" onclick="showFindPage()">Find File</button>
+        </div>
+
+        <div id="upload-page" class="hidden">
+            <div id="file-upload-step">
+                <label for="file-input" class="file-input-label">
+                    <span class="file-input-icon">+</span>
+                    <span>Click to upload file</span>
+                </label>
+                <input type="file" id="file-input" class="hidden" onchange="handleFileSelect(event)">
+            </div>
+            <div id="code-input-step" class="hidden">
+                <input type="text" id="upload-code" class="input" placeholder="Enter file code (e.g. 123456)" minlength="6" maxlength="6" required>
+                <button class="btn btn-primary" onclick="handleUpload()" id="upload-btn">Confirm</button>
+            </div>
+        </div>
+
+        <div id="find-page" class="hidden">
+            <input type="text" id="find-code" class="input" placeholder="Enter file code" minlength="6" maxlength="6" required>
+            <button class="btn btn-primary" onclick="handleFind()" id="find-btn">Confirm</button>
+        </div>
+
+        <div id="success-page" class="hidden">
+            <div class="success-icon">✓</div>
+            <h2>Transfer Completed</h2>
+        </div>
+    </div>
+
+    <script>
+        function showUploadPage() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('upload-page').classList.remove('hidden');
+            document.getElementById('file-upload-step').classList.remove('hidden');
+            document.getElementById('code-input-step').classList.add('hidden');
+        }
+
+        function showFindPage() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('find-page').classList.remove('hidden');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-upload-step').classList.add('hidden');
+                document.getElementById('code-input-step').classList.remove('hidden');
+            }
+        }
+
+        async function handleUpload() {
+            const fileInput = document.getElementById('file-input');
+            const codeInput = document.getElementById('upload-code');
+            const uploadBtn = document.getElementById('upload-btn');
+
+            if (!fileInput.files[0] || !codeInput.value) return;
+
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+
+            try {
+                // Simulating file upload
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                showSuccessPage();
+            } catch (error) {
+                console.error('Upload failed:', error);
+                alert('Upload failed. Please try again.');
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Confirm';
+            }
+        }
+
+        async function handleFind() {
+            const codeInput = document.getElementById('find-code');
+            const findBtn = document.getElementById('find-btn');
+
+            if (!codeInput.value) return;
+
+            findBtn.disabled = true;
+            findBtn.textContent = 'Finding file...';
+
+            try {
+                // Simulating file retrieval
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                showSuccessPage();
+            } catch (error) {
+                console.error('File not found:', error);
+                alert('File not found. Please check the code and try again.');
+            } finally {
+                findBtn.disabled = false;
+                findBtn.textContent = 'Confirm';
+            }
+        }
+
+        function showSuccessPage() {
+            document.getElementById('upload-page').classList.add('hidden');
+            document.getElementById('find-page').classList.add('hidden');
+            document.getElementById('success-page').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
